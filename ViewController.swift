@@ -61,11 +61,26 @@ class ViewController: UIViewController, UITextFieldDelegate {
             let calendar = Calendar(identifier: .japanese)
             let components = calendar.dateComponents([.year, .day, .hour, .minute, .second], from: now, to: estimatedTimeReset)
             
-            countdownLabel.text = String(format: "残り" + "%02d日:%02d時間:%02d分:%02d秒",
-                                         components.day!,
-                                         components.hour!,
-                                         components.minute!,
-                                         components.second!)
+            if components.day == 0 {
+                // 日も時間も0のとき、分と秒のみ表示
+                if components.hour == 0 {
+                    countdownLabel.text = String(format: "残り" + "%02d分%02d秒", components.minute!, components.second!)
+                }
+                
+                // 日が0のとき、時間と分と秒を表示
+                else {
+                    countdownLabel.text = String(format: "残り" + "%02d時間%02d分%02d秒", components.hour!, components.minute!, components.second!)
+                }
+            }
+                
+            // すべて表示
+            else {
+                countdownLabel.text = String(format: "残り" + "%02d日%02d時間%02d分%02d秒",
+                                             components.day!,
+                                             components.hour!,
+                                             components.minute!,
+                                             components.second!)
+            }
         }
     }
     
