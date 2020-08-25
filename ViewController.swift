@@ -12,6 +12,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
 
     @IBOutlet weak var currentTimeLabel: UILabel!
     @IBOutlet weak var textField: UITextField!
+    @IBOutlet weak var countdownLabel: UILabel!
     
     var datePicker: UIDatePicker = UIDatePicker()
     var estimatedTime = Date()
@@ -54,14 +55,13 @@ class ViewController: UIViewController, UITextFieldDelegate {
         
         if let text = textField.text, !text.isEmpty {
             // 表示する時刻の設定
-            let dateIntervalF = DateIntervalFormatter()
-            dateIntervalF.locale = Locale(identifier: "ja_JP")
-            dateIntervalF.timeZone = .autoupdatingCurrent
-            dateIntervalF.dateStyle = .full
-            dateIntervalF.timeStyle = .medium
-            
-            let timeInterval = dateIntervalF.string(from: now, to: estimatedTime)
-            print(timeInterval)
+            let calendar = Calendar(identifier: .japanese)
+            let timeInterval = calendar.dateComponents([.day, .hour, .minute, .second], from: now, to: estimatedTime)
+            countdownLabel.text = String(format: "残り" + "%02d日:%02d時間:%02d分:%02d秒",
+                                         timeInterval.day!,
+                                         timeInterval.hour!,
+                                         timeInterval.minute!,
+                                         timeInterval.second!)
         }
     }
     
