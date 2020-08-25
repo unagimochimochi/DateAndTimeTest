@@ -54,14 +54,18 @@ class ViewController: UIViewController, UITextFieldDelegate {
         currentTimeLabel.text = dateFormatter.string(from: now)
         
         if let text = textField.text, !text.isEmpty {
+            // UIDatePickerで出力された日時の秒を0にする
+            let estimatedTimeReset = resetTime(date: estimatedTime)
+            
             // 表示する時刻の設定
             let calendar = Calendar(identifier: .japanese)
-            let timeInterval = calendar.dateComponents([.day, .hour, .minute, .second], from: now, to: estimatedTime)
+            let components = calendar.dateComponents([.year, .day, .hour, .minute, .second], from: now, to: estimatedTimeReset)
+            
             countdownLabel.text = String(format: "残り" + "%02d日:%02d時間:%02d分:%02d秒",
-                                         timeInterval.day!,
-                                         timeInterval.hour!,
-                                         timeInterval.minute!,
-                                         timeInterval.second!)
+                                         components.day!,
+                                         components.hour!,
+                                         components.minute!,
+                                         components.second!)
         }
     }
     
@@ -78,6 +82,16 @@ class ViewController: UIViewController, UITextFieldDelegate {
         
         textField.text = dateFormatter.string(from: datePicker.date)
         estimatedTime = datePicker.date
+    }
+    
+    // 秒を0にする
+    func resetTime(date: Date) -> Date {
+        let calendar: Calendar = Calendar(identifier: .japanese)
+        var components = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: date)
+
+        components.second = 0
+
+        return calendar.date(from: components)!
     }
 
 }
