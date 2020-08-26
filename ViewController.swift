@@ -13,6 +13,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var currentTimeLabel: UILabel!
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var countdownLabel: UILabel!
+    @IBOutlet weak var countdownView: UIView!
     @IBOutlet weak var countdownViewHeight: NSLayoutConstraint!
     
     var datePicker: UIDatePicker = UIDatePicker()
@@ -77,6 +78,11 @@ class ViewController: UIViewController, UITextFieldDelegate {
 
                 // 時間と分と秒を表示
                 countdownLabel.text = String(format: "%02d:%02d", components.minute!, components.second!)
+                
+                if components.hour! <= 0 && components.minute! <= 0 && components.second! <= 0 {
+                    countdownLabel.text = "00:00"
+                    countdownView.backgroundColor = UIColor(hue: 0.03, saturation: 0.95, brightness: 0.85, alpha: 1.0)
+                }
             }
         }
     }
