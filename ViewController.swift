@@ -13,6 +13,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var currentTimeLabel: UILabel!
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var countdownLabel: UILabel!
+    @IBOutlet weak var countdownViewHeight: NSLayoutConstraint!
     
     var datePicker: UIDatePicker = UIDatePicker()
     var estimatedTime = Date()
@@ -22,6 +23,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
         // Do any additional setup after loading the view.
         
         textField.delegate = self
+        
+        countdownViewHeight.constant = 0
         
         // 0.1秒ごとに処理
         Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(update), userInfo: nil, repeats: true)
@@ -61,24 +64,19 @@ class ViewController: UIViewController, UITextFieldDelegate {
             let calendar = Calendar(identifier: .japanese)
             let components = calendar.dateComponents([.year, .day, .hour, .minute, .second], from: now, to: estimatedTimeReset)
             
-            // 出力した時刻まで3時間以上のとき、カウントダウンを非表示
-            if components.hour! >= 3 {
+            // 出力した時刻まで1時間以上のとき、カウントダウンを非表示
+            if components.hour! >= 1 {
                 countdownLabel.isHidden = true
+                countdownViewHeight.constant = 0
             }
                 
-            // 3時間未満のとき、カウントダウンを表示
+            // 1時間未満のとき、カウントダウンを表示
             else {
                 countdownLabel.isHidden = false
-                
-                // 時間が0のとき、分と秒のみ表示
-                if components.hour == 0 {
-                    countdownLabel.text = String(format: "残り" + "%02d分%02d秒", components.minute!, components.second!)
-                }
-                    
+                countdownViewHeight.constant = 200
+
                 // 時間と分と秒を表示
-                else {
-                    countdownLabel.text = String(format: "残り" + "%02d時間%02d分%02d秒", components.hour!, components.minute!, components.second!)
-                }
+                countdownLabel.text = String(format: "%02d:%02d", components.minute!, components.second!)
             }
         }
     }
